@@ -34,7 +34,7 @@ async def get_tools():
     return tools, exit_stack
 
 
-async def get_agent():
+async def get_python_agent():
     """
     Initializes and returns the Python execution agent and its associated exit stack.
 
@@ -60,4 +60,3 @@ async def get_agent():
     return root_agent, exit_stack
 
 
-root_agent = get_agent()

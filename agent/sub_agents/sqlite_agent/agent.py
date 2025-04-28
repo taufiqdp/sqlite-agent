@@ -28,7 +28,7 @@ async def get_tools():
     return tools, exit_stack
 
 
-async def get_agent():
+async def get_sqlite_agent():
     """
     Initializes the MCP tools and creates an Agent instance configured for SQLite interaction.
 
@@ -54,4 +54,3 @@ async def get_agent():
     return root_agent, exit_stack
 
 
-root_agent = get_agent()
