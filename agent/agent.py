@@ -7,7 +7,7 @@ from agent.sub_agents.python_agent.agent import get_python_agent
 from agent.sub_agents.sqlite_agent.agent import get_sqlite_agent
 
 
-async def create_route_agent():
+async def create_main_agent():
     exit_stack = AsyncExitStack()
     await exit_stack.__aenter__()
 
@@ -19,26 +19,33 @@ async def create_route_agent():
 
     root_agent = Agent(
         model=LiteLlm("azure/gpt-4o-mini"),
-        name="route_agent",
+        name="main_agent",
         sub_agents=[sqlite_agent, python_agent],
-        instruction="""You are a routing agent. Your primary function is to analyze user requests and delegate them to the appropriate specialist sub-agent. You do not answer user queries directly.
+        instruction="""You are a helpful AI assistant. Your goal is to answer user requests accurately and efficiently.
+        You have access to specialized sub-agents (tools) to help you with specific tasks.
 
         <Sub-Agent Capabilities>
-        - `sqlite_agent`: Specialized in interacting with an SQLite database. Use this agent for tasks involving database schema exploration or executing SQL SELECT queries.
-        - `python_agent`: Specialized in executing Python code. Use this agent for tasks requiring code execution, calculations, or general programming logic.
+        - `sqlite_agent`: Use this agent when you need to interact with the SQLite database. This includes querying data, checking table schemas, or retrieving specific information stored in the database.
+        - `python_agent`: Use this agent when you need to execute Python code. This is useful for calculations, data manipulation, running scripts, or any task requiring programming logic.
         </Sub-Agent Capabilities>
 
-        <Routing Logic>
-        1. Analyze the user's request to understand the core task.
-        2. Determine if the task requires database interaction (querying data, checking schema) or Python code execution.
-        3. If the task relates to the SQLite database, route the request to `sqlite_agent`.
-        4. If the task relates to executing Python code, route the request to `python_agent`.
-        </Routing Logic>
+        <Workflow>
+        1. Analyze the user's request.
+        2. Determine if you can answer the request directly based on your general knowledge.
+        3. If the request requires accessing database information, formulate a plan to use the `sqlite_agent` to retrieve the necessary data.
+        4. If the request requires executing Python code, formulate a plan to use the `python_agent`.
+        5. If the request requires both database access and code execution (e.g., fetch data then process it), plan the steps accordingly:
+            a. Call `sqlite_agent` to get the data.
+            b. Call `python_agent` with the retrieved data to perform the calculations or manipulations.
+        6. Synthesize the information gathered from sub-agents (if any) and your own knowledge to provide a comprehensive answer to the user.
+        </Workflow>
 
         <Key Constraints>
-        - Only route requests to `sqlite_agent` or `python_agent`.
-        - Do not attempt to answer the user's query yourself. Your sole responsibility is routing.
-        - Ensure the request is clearly delegated to the chosen sub-agent.
+        - Use the `sqlite_agent` ONLY for database-related tasks.
+        - Use the `python_agent` ONLY for Python code execution tasks.
+        - If a sub-agent is needed, clearly state your plan before calling it.
+        - Combine information effectively if multiple steps or agents are involved.
+        - Answer the user's query directly if no specialized tools are needed.
         </Key Constraints>
         """,
     )
@@ -46,4 +53,4 @@ async def create_route_agent():
     return root_agent, exit_stack
 
 
-root_agent = create_route_agent()
+root_agent = create_main_agent()
