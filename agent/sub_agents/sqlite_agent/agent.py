@@ -52,5 +52,3 @@ async def get_sqlite_agent():
     )
 
     return root_agent, exit_stack
-
-

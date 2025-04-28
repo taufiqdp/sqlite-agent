@@ -58,5 +58,3 @@ async def get_python_agent():
     )
 
     return root_agent, exit_stack
-
-

@@ -1,8 +1,11 @@
 from contextlib import AsyncExitStack
-from .sub_agents.python_agent.agent import get_python_agent
-from .sub_agents.sqlite_agent.agent import get_sqlite_agent
+
 from google.adk.agents import Agent
 from google.adk.models.lite_llm import LiteLlm
+
+from agent.sub_agents.python_agent.agent import get_python_agent
+from agent.sub_agents.sqlite_agent.agent import get_sqlite_agent
+
 
 async def create_route_agent():
     exit_stack = AsyncExitStack()
@@ -40,3 +43,7 @@ async def create_route_agent():
         """,
     )
 
+    return root_agent, exit_stack
+
+
+root_agent = create_route_agent()
