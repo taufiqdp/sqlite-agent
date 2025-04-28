@@ -1,0 +1,18 @@
+[project]
+name = "wp-01"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "google-adk>=0.3.0",
+    "litellm==1.66.1",
+    "mcp[cli]>=1.6.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "ruff>=0.11.7",
+]
