@@ -29,12 +29,18 @@ async def get_tools():
 
 
 async def get_agent():
-    """Get agent"""
+    """
+    Initializes the MCP tools and creates an Agent instance configured for SQLite interaction.
+
+    Returns:
+        tuple: A tuple containing:
+            - root_agent (Agent): The configured agent instance.
+            - exit_stack (AsyncExitStack): Context manager for cleaning up tool connections.
+    """
     tools, exit_stack = await get_tools()
 
     print(f"Successfully load {len(tools)} tools")
 
-    await exit_stack.aclose()
     root_agent = Agent(
         name="sqlite_agent",
         model=LiteLlm("azure/gpt-4o-mini"),
